@@ -42,6 +42,7 @@ or formulation process development.
 - Built-in mechanistic models.
 - Active-learning recommendation.
 - RL-lite sequential experiment policy.
+- Thermo/Chemicals property-package adapter.
 - QbD risk register.
 - Markdown technical memo.
 

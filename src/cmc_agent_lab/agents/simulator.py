@@ -5,6 +5,7 @@ from __future__ import annotations
 from cmc_agent_lab.audit import record_event
 from cmc_agent_lab.schema import AgentState, SimulationResult
 from cmc_agent_lab.simulators.builtin import run_builtin_tool
+from cmc_agent_lab.simulators.thermo_chemicals import run_thermo_chemicals
 
 
 def run_simulators(state: AgentState) -> AgentState:
@@ -24,6 +25,8 @@ def run_simulators(state: AgentState) -> AgentState:
             continue
         if selection.tool_name.startswith("builtin."):
             results.append(run_builtin_tool(selection.tool_name, state.scenario))
+        elif selection.tool_name == "external.thermo_chemicals":
+            results.append(run_thermo_chemicals(state.scenario))
     state.simulations = results
     return record_event(
         state,

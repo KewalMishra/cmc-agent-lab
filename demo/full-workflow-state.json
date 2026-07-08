@@ -210,6 +210,13 @@
       "reason": "Maps to qbd, cqa, cpp; available. QbD/FMEA-style risk register linking CPPs to CQAs.",
       "required": true,
       "available": true
+    },
+    {
+      "tool_name": "external.thermo_chemicals",
+      "category": "property_package",
+      "reason": "Maps to phase_equilibrium, properties, mixtures; available. Thermodynamic and chemical-property libraries for Python.",
+      "required": false,
+      "available": true
     }
   ],
   "simulations": [
@@ -291,6 +298,46 @@
       ],
       "warnings": [
         "Dissolution at 30 minutes is below target."
+      ]
+    },
+    {
+      "tool_name": "external.thermo_chemicals",
+      "status": "ok",
+      "inputs": {
+        "active_ingredient": "acetaminophen",
+        "solvents": [
+          {
+            "name": "water",
+            "mole_fraction": 0.7
+          },
+          {
+            "name": "ethanol",
+            "mole_fraction": 0.3
+          }
+        ],
+        "temperature_k": 315.65,
+        "pressure_pa": 101325.0
+      },
+      "metrics": {
+        "property_temperature_k": 315.65,
+        "api_molecular_weight_g_mol": 151.16255999999998,
+        "api_melting_point_k": 442.95,
+        "api_boiling_point_k": 773.15,
+        "api_vapor_pressure_pa": 1.0439272750542672,
+        "api_density_kg_m3": 1135.9157342417677,
+        "api_solubility_parameter_mpa05": 23.932317810711876,
+        "solvent_density_kg_m3": 890.3717260746123,
+        "solvent_viscosity_pa_s": 0.0015092260314477168,
+        "solvent_surface_tension_n_m": 0.03721904658110578,
+        "solubility_parameter_gap_mpa05": 10.588345338124793
+      },
+      "assumptions": [
+        "Thermo/Chemicals properties are used as an open-source screening property package.",
+        "Solubility-parameter mismatch is a proxy for solvent compatibility, not a validated solubility model.",
+        "Mixture properties are used for early CMC screening and require experimental confirmation."
+      ],
+      "warnings": [
+        "acetaminophen is predicted as solid at the screening temperature."
       ]
     }
   ],
@@ -441,7 +488,7 @@
   ],
   "audit_events": [
     {
-      "timestamp": "2026-07-08T23:04:20.656311Z",
+      "timestamp": "2026-07-08T23:53:46.089445Z",
       "step": "objective_scoping",
       "status": "ok",
       "summary": "Parsed workflow mode, unit operations, CQAs, and constraints into structured intent.",
@@ -449,23 +496,23 @@
       "output_digest": "5ee7a07651e3808a"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.656743Z",
+      "timestamp": "2026-07-08T23:53:46.089932Z",
       "step": "tool_planning",
       "status": "ok",
-      "summary": "Selected 7 tools for mode=full.",
+      "summary": "Selected 8 tools for mode=full.",
       "input_digest": "5ee7a07651e3808a",
-      "output_digest": "5841738a2433fd9b"
+      "output_digest": "479f39a33a9cbf0d"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.660153Z",
+      "timestamp": "2026-07-08T23:53:46.925242Z",
       "step": "mechanistic_simulation",
       "status": "ok",
-      "summary": "Executed or evaluated 4 simulator selections.",
-      "input_digest": "5841738a2433fd9b",
-      "output_digest": "c925ebfe331ceed3"
+      "summary": "Executed or evaluated 5 simulator selections.",
+      "input_digest": "479f39a33a9cbf0d",
+      "output_digest": "e1f1352dd58483d5"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.660197Z",
+      "timestamp": "2026-07-08T23:53:46.925326Z",
       "step": "surrogate_readiness",
       "status": "ok",
       "summary": "Historical experiment count=4; surrogate status=ready.",
@@ -473,7 +520,7 @@
       "output_digest": "ccf846316b5c224a"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.673676Z",
+      "timestamp": "2026-07-08T23:53:46.931499Z",
       "step": "experiment_design",
       "status": "ok",
       "summary": "Recommended top 5 next experiments.",
@@ -481,7 +528,7 @@
       "output_digest": "b70e3148d4e4a485"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.673924Z",
+      "timestamp": "2026-07-08T23:53:46.931824Z",
       "step": "qbd_risk_review",
       "status": "ok",
       "summary": "Created 5 CQA/CPP risk items.",
@@ -489,22 +536,22 @@
       "output_digest": "927f7ad8237d2842"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.674142Z",
+      "timestamp": "2026-07-08T23:53:46.932058Z",
       "step": "audit_verification",
       "status": "ok",
       "summary": "Audit trail complete.",
-      "input_digest": "4ae181b75f3b34d8",
+      "input_digest": "a062fba66cd8ce78",
       "output_digest": "87d8f98a668d410b"
     },
     {
-      "timestamp": "2026-07-08T23:04:20.674551Z",
+      "timestamp": "2026-07-08T23:53:46.932531Z",
       "step": "report_rendering",
       "status": "ok",
       "summary": "Rendered technical development memo.",
-      "input_digest": "62aabb5e425469ed",
-      "output_digest": "822c97e2838e4e8d"
+      "input_digest": "b0ba77beea1fa693",
+      "output_digest": "70d6af6dcb56aa7f"
     }
   ],
   "human_review_required": true,
-  "report": "# Small Molecule Tablet Process Development\n\n## Executive Summary\n\nCMC Agent Lab translated the development question into a tool-routed, auditable full workflow for small_molecule_tablet.\n\n## Objective\n\nFor a poorly soluble late-stage small molecule intended as an oral tablet, identify the minimum set of crystallization, reaction, dissolution, and stability experiments that should be run next to improve manufacturability, purity, dissolution, and 24-month shelf-life.\n\n## Selected Tools\n\n- `builtin.arrhenius_stability` (mechanistic_simulator, available): Maps to stability; available. First-order Arrhenius degradation model for shelf-life sensitivity.\n- `builtin.batch_reactor_ode` (mechanistic_simulator, available): Maps to reaction; available. ODE model for main reaction conversion and side-product formation.\n- `builtin.crystallization_moments` (mechanistic_simulator, available): Maps to crystallization; available. Moment-based population-balance approximation for crystallization.\n- `builtin.noyes_whitney_dissolution` (mechanistic_simulator, available): Maps to dissolution; available. Noyes-Whitney dissolution model with pH and antisolvent adjustments.\n- `optimizer.active_learning_batch` (optimizer, available): Maps to design_of_experiments, bayesian_optimization; available. Candidate ranking with GP uncertainty when historical data is available.\n- `rl.epsilon_greedy_campaign` (rl_policy, available): Maps to sequential_experimentation, digital_twin, policy_learning; available. Sequential experiment-selection policy trained against the mechanistic simulator environment.\n- `risk.qbd_fmea` (risk, available): Maps to qbd, cqa, cpp; available. QbD/FMEA-style risk register linking CPPs to CQAs.\n\n## Mechanistic Simulation Results\n\n### builtin.arrhenius_stability\n\n- purity_remaining_pct: 91.604\n- degradation_pct: 8.396\n- degradation_rate_per_day: 0.000\n- Warning: Predicted shelf-life purity is below threshold.\n- Assumptions: Single dominant first-order degradation pathway.; Arrhenius temperature dependence around 25 C reference.\n\n### builtin.batch_reactor_ode\n\n- conversion_pct: 98.888\n- isolated_yield_proxy_pct: 88.965\n- impurity_proxy_pct: 13.609\n- Warning: Side-product burden exceeds a typical late-stage impurity threshold.\n- Assumptions: Competitive first-order main and side reactions.; Well-mixed batch or plug-flow-equivalent residence-time approximation.\n\n### builtin.crystallization_moments\n\n- crystallization_yield_pct: 70.134\n- particle_size_d50_um: 91.558\n- nucleation_density_proxy: 16.091\n- Assumptions: Moment-based population-balance approximation.; Temperature-dependent solubility and antisolvent-driven supersaturation.\n\n### builtin.noyes_whitney_dissolution\n\n- dissolution_30min_pct: 73.140\n- relative_solubility_capacity: 0.853\n- Warning: Dissolution at 30 minutes is below target.\n- Assumptions: Noyes-Whitney dissolution with constant surface-area proxy.; pH and antisolvent terms approximate formulation effects.\n\n## Recommended Next Experiments\n\n1. temperature_c=40.1321, cooling_rate_c_min=0.6203, antisolvent_fraction=0.2616, residence_time_min=172.1848, ph=7.1672 | expected score=78.494 | information gain=4.948\n   Rationale: temperature_c=40.1, cooling_rate_c_min=0.62, antisolvent_fraction=0.262, residence_time_min=172, ph=7.17; expected score 78.5; uses GP uncertainty from historical experiments; information gain 4.95.\n2. temperature_c=33.1689, cooling_rate_c_min=0.5101, antisolvent_fraction=0.1938, residence_time_min=179.8588, ph=5.5577 | expected score=78.438 | information gain=4.948\n   Rationale: temperature_c=33.2, cooling_rate_c_min=0.51, antisolvent_fraction=0.194, residence_time_min=180, ph=5.56; expected score 78.4; uses GP uncertainty from historical experiments; information gain 4.95.\n3. temperature_c=28.5877, cooling_rate_c_min=0.4727, antisolvent_fraction=0.2413, residence_time_min=142.2497, ph=7.1898 | expected score=78.378 | information gain=4.948\n   Rationale: temperature_c=28.6, cooling_rate_c_min=0.473, antisolvent_fraction=0.241, residence_time_min=142, ph=7.19; expected score 78.4; uses GP uncertainty from historical experiments; information gain 4.95.\n4. temperature_c=24.3311, cooling_rate_c_min=1.0257, antisolvent_fraction=0.2844, residence_time_min=153.5828, ph=6.9105 | expected score=78.108 | information gain=4.948\n   Rationale: temperature_c=24.3, cooling_rate_c_min=1.03, antisolvent_fraction=0.284, residence_time_min=154, ph=6.91; expected score 78.1; uses GP uncertainty from historical experiments; information gain 4.95.\n5. temperature_c=37.1263, cooling_rate_c_min=0.2872, antisolvent_fraction=0.2981, residence_time_min=154.5829, ph=5.6306 | expected score=77.945 | information gain=4.948\n   Rationale: temperature_c=37.1, cooling_rate_c_min=0.287, antisolvent_fraction=0.298, residence_time_min=155, ph=5.63; expected score 77.9; uses GP uncertainty from historical experiments; information gain 4.95.\n\n## QbD Risk Register\n\n- RPN 48: `temperature_c` -> `impurity_burden`. temperature_c variability may move impurity_burden outside target <= 1.0% Mitigation: Constrain high-temperature residence time and monitor side products.\n- RPN 40: `temperature_c` -> `purity`. temperature_c variability may move purity outside target >= 98.0% Mitigation: Add stability-indicating method and impurity trend review.\n- RPN 32: `ph` -> `dissolution_30min`. ph variability may move dissolution_30min outside target >= 85.0% Mitigation: Confirm discriminatory dissolution method and pH/formulation range.\n- RPN 27: `cooling_rate_c_min` -> `particle_size_d50_um`. cooling_rate_c_min variability may move particle_size_d50_um outside target 35-80 um Mitigation: Use PAT particle-size monitoring during crystallization.\n- RPN 27: `residence_time_min` -> `isolated_yield`. residence_time_min variability may move isolated_yield outside target >= 82.0% Mitigation: Run mass-balance reconciliation and yield sensitivity.\n\n## Audit Controls\n\n- Human review required: True\n- Audit events recorded: 7\n- objective_scoping: ok - Parsed workflow mode, unit operations, CQAs, and constraints into structured intent.\n- tool_planning: ok - Selected 7 tools for mode=full.\n- mechanistic_simulation: ok - Executed or evaluated 4 simulator selections.\n- surrogate_readiness: ok - Historical experiment count=4; surrogate status=ready.\n- experiment_design: ok - Recommended top 5 next experiments.\n- qbd_risk_review: ok - Created 5 CQA/CPP risk items.\n- audit_verification: ok - Audit trail complete.\n\n## Intended Use Boundary\n\nThis is a process-development decision-support workflow. It proposes model-backed experiments for scientist review; it does not release, validate, or manufacture a drug product.\n"
+  "report": "# Small Molecule Tablet Process Development\n\n## Executive Summary\n\nCMC Agent Lab translated the development question into a tool-routed, auditable full workflow for small_molecule_tablet.\n\n## Objective\n\nFor a poorly soluble late-stage small molecule intended as an oral tablet, identify the minimum set of crystallization, reaction, dissolution, and stability experiments that should be run next to improve manufacturability, purity, dissolution, and 24-month shelf-life.\n\n## Selected Tools\n\n- `builtin.arrhenius_stability` (mechanistic_simulator, available): Maps to stability; available. First-order Arrhenius degradation model for shelf-life sensitivity.\n- `builtin.batch_reactor_ode` (mechanistic_simulator, available): Maps to reaction; available. ODE model for main reaction conversion and side-product formation.\n- `builtin.crystallization_moments` (mechanistic_simulator, available): Maps to crystallization; available. Moment-based population-balance approximation for crystallization.\n- `builtin.noyes_whitney_dissolution` (mechanistic_simulator, available): Maps to dissolution; available. Noyes-Whitney dissolution model with pH and antisolvent adjustments.\n- `optimizer.active_learning_batch` (optimizer, available): Maps to design_of_experiments, bayesian_optimization; available. Candidate ranking with GP uncertainty when historical data is available.\n- `rl.epsilon_greedy_campaign` (rl_policy, available): Maps to sequential_experimentation, digital_twin, policy_learning; available. Sequential experiment-selection policy trained against the mechanistic simulator environment.\n- `risk.qbd_fmea` (risk, available): Maps to qbd, cqa, cpp; available. QbD/FMEA-style risk register linking CPPs to CQAs.\n- `external.thermo_chemicals` (property_package, available): Maps to phase_equilibrium, properties, mixtures; available. Thermodynamic and chemical-property libraries for Python.\n\n## Model and Simulator Results\n\n### builtin.arrhenius_stability\n\n- purity_remaining_pct: 91.604\n- degradation_pct: 8.396\n- degradation_rate_per_day: 0.000\n- Warning: Predicted shelf-life purity is below threshold.\n- Assumptions: Single dominant first-order degradation pathway.; Arrhenius temperature dependence around 25 C reference.\n\n### builtin.batch_reactor_ode\n\n- conversion_pct: 98.888\n- isolated_yield_proxy_pct: 88.965\n- impurity_proxy_pct: 13.609\n- Warning: Side-product burden exceeds a typical late-stage impurity threshold.\n- Assumptions: Competitive first-order main and side reactions.; Well-mixed batch or plug-flow-equivalent residence-time approximation.\n\n### builtin.crystallization_moments\n\n- crystallization_yield_pct: 70.134\n- particle_size_d50_um: 91.558\n- nucleation_density_proxy: 16.091\n- Assumptions: Moment-based population-balance approximation.; Temperature-dependent solubility and antisolvent-driven supersaturation.\n\n### builtin.noyes_whitney_dissolution\n\n- dissolution_30min_pct: 73.140\n- relative_solubility_capacity: 0.853\n- Warning: Dissolution at 30 minutes is below target.\n- Assumptions: Noyes-Whitney dissolution with constant surface-area proxy.; pH and antisolvent terms approximate formulation effects.\n\n### external.thermo_chemicals\n\n- property_temperature_k: 315.650\n- api_molecular_weight_g_mol: 151.163\n- api_melting_point_k: 442.950\n- api_boiling_point_k: 773.150\n- api_vapor_pressure_pa: 1.044\n- api_density_kg_m3: 1135.916\n- api_solubility_parameter_mpa05: 23.932\n- solvent_density_kg_m3: 890.372\n- solvent_viscosity_pa_s: 0.002\n- solvent_surface_tension_n_m: 0.037\n- solubility_parameter_gap_mpa05: 10.588\n- Warning: acetaminophen is predicted as solid at the screening temperature.\n- Assumptions: Thermo/Chemicals properties are used as an open-source screening property package.; Solubility-parameter mismatch is a proxy for solvent compatibility, not a validated solubility model.; Mixture properties are used for early CMC screening and require experimental confirmation.\n\n## Recommended Next Experiments\n\n1. temperature_c=40.1321, cooling_rate_c_min=0.6203, antisolvent_fraction=0.2616, residence_time_min=172.1848, ph=7.1672 | expected score=78.494 | information gain=4.948\n   Rationale: temperature_c=40.1, cooling_rate_c_min=0.62, antisolvent_fraction=0.262, residence_time_min=172, ph=7.17; expected score 78.5; uses GP uncertainty from historical experiments; information gain 4.95.\n2. temperature_c=33.1689, cooling_rate_c_min=0.5101, antisolvent_fraction=0.1938, residence_time_min=179.8588, ph=5.5577 | expected score=78.438 | information gain=4.948\n   Rationale: temperature_c=33.2, cooling_rate_c_min=0.51, antisolvent_fraction=0.194, residence_time_min=180, ph=5.56; expected score 78.4; uses GP uncertainty from historical experiments; information gain 4.95.\n3. temperature_c=28.5877, cooling_rate_c_min=0.4727, antisolvent_fraction=0.2413, residence_time_min=142.2497, ph=7.1898 | expected score=78.378 | information gain=4.948\n   Rationale: temperature_c=28.6, cooling_rate_c_min=0.473, antisolvent_fraction=0.241, residence_time_min=142, ph=7.19; expected score 78.4; uses GP uncertainty from historical experiments; information gain 4.95.\n4. temperature_c=24.3311, cooling_rate_c_min=1.0257, antisolvent_fraction=0.2844, residence_time_min=153.5828, ph=6.9105 | expected score=78.108 | information gain=4.948\n   Rationale: temperature_c=24.3, cooling_rate_c_min=1.03, antisolvent_fraction=0.284, residence_time_min=154, ph=6.91; expected score 78.1; uses GP uncertainty from historical experiments; information gain 4.95.\n5. temperature_c=37.1263, cooling_rate_c_min=0.2872, antisolvent_fraction=0.2981, residence_time_min=154.5829, ph=5.6306 | expected score=77.945 | information gain=4.948\n   Rationale: temperature_c=37.1, cooling_rate_c_min=0.287, antisolvent_fraction=0.298, residence_time_min=155, ph=5.63; expected score 77.9; uses GP uncertainty from historical experiments; information gain 4.95.\n\n## QbD Risk Register\n\n- RPN 48: `temperature_c` -> `impurity_burden`. temperature_c variability may move impurity_burden outside target <= 1.0% Mitigation: Constrain high-temperature residence time and monitor side products.\n- RPN 40: `temperature_c` -> `purity`. temperature_c variability may move purity outside target >= 98.0% Mitigation: Add stability-indicating method and impurity trend review.\n- RPN 32: `ph` -> `dissolution_30min`. ph variability may move dissolution_30min outside target >= 85.0% Mitigation: Confirm discriminatory dissolution method and pH/formulation range.\n- RPN 27: `cooling_rate_c_min` -> `particle_size_d50_um`. cooling_rate_c_min variability may move particle_size_d50_um outside target 35-80 um Mitigation: Use PAT particle-size monitoring during crystallization.\n- RPN 27: `residence_time_min` -> `isolated_yield`. residence_time_min variability may move isolated_yield outside target >= 82.0% Mitigation: Run mass-balance reconciliation and yield sensitivity.\n\n## Audit Controls\n\n- Human review required: True\n- Audit events recorded: 7\n- objective_scoping: ok - Parsed workflow mode, unit operations, CQAs, and constraints into structured intent.\n- tool_planning: ok - Selected 8 tools for mode=full.\n- mechanistic_simulation: ok - Executed or evaluated 5 simulator selections.\n- surrogate_readiness: ok - Historical experiment count=4; surrogate status=ready.\n- experiment_design: ok - Recommended top 5 next experiments.\n- qbd_risk_review: ok - Created 5 CQA/CPP risk items.\n- audit_verification: ok - Audit trail complete.\n\n## Intended Use Boundary\n\nThis is a process-development decision-support workflow. It proposes model-backed experiments for scientist review; it does not release, validate, or manufacture a drug product.\n"
 }

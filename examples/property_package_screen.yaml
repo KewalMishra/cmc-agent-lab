@@ -1,0 +1,56 @@
+project_name: "Thermo/Chemicals Solvent Property Screen"
+question: >
+  Screen a water/ethanol solvent system for a poorly soluble API using an open-source
+  thermodynamic property package before deciding whether to run dissolution and crystallization
+  experiments.
+mode: screen
+product_type: small_molecule_tablet
+route: oral
+requested_tools:
+  - external.thermo_chemicals
+unit_operations:
+  - dissolution
+  - crystallization
+qtp_profile:
+  dose_mg: 100
+  shelf_life_months: 24
+  target_release: immediate_release
+critical_quality_attributes:
+  - name: dissolution_30min
+    target: ">= 85.0%"
+    weight: 0.4
+    risk_severity: 4
+  - name: particle_size_d50_um
+    target: "35-80 um"
+    weight: 0.3
+    risk_severity: 3
+  - name: purity
+    target: ">= 98.0%"
+    weight: 0.3
+    risk_severity: 5
+design_space:
+  variables:
+    - name: temperature_c
+      low: 20
+      high: 40
+      units: C
+    - name: antisolvent_fraction
+      low: 0.0
+      high: 0.45
+      units: volume_fraction
+    - name: ph
+      low: 4.5
+      high: 7.5
+      units: pH
+constraints:
+  max_experiments: 3
+  require_human_approval: true
+  property_package:
+    active_ingredient: acetaminophen
+    temperature_c: 25
+    pressure_pa: 101325
+    solvents:
+      - name: water
+        mole_fraction: 0.7
+      - name: ethanol
+        mole_fraction: 0.3

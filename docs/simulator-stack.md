@@ -91,6 +91,14 @@ Sources:
 - [Thermo documentation](https://thermo.readthedocs.io/index.html)
 - [Chemicals documentation](https://chemicals.readthedocs.io/index.html)
 
+Current repository status:
+
+- Implemented as `external.thermo_chemicals`.
+- Uses `thermo.Chemical` for API/pure-component properties.
+- Uses `thermo.Mixture` for solvent-system density, viscosity, surface tension, and phase.
+- Computes a solubility-parameter mismatch proxy for solvent compatibility screening.
+- Exposed through `examples/property_package_screen.yaml`.
+
 ## Integration Roadmap
 
 1. Keep built-in models as deterministic test fixtures.

@@ -1,0 +1,256 @@
+{
+  "scenario": {
+    "project_name": "Thermo/Chemicals Solvent Property Screen",
+    "question": "Screen a water/ethanol solvent system for a poorly soluble API using an open-source thermodynamic property package before deciding whether to run dissolution and crystallization experiments.\n",
+    "mode": "screen",
+    "product_type": "small_molecule_tablet",
+    "route": "oral",
+    "unit_operations": [
+      "dissolution",
+      "crystallization"
+    ],
+    "qtp_profile": {
+      "dose_mg": 100,
+      "shelf_life_months": 24,
+      "target_release": "immediate_release"
+    },
+    "critical_quality_attributes": [
+      {
+        "name": "dissolution_30min",
+        "target": ">= 85.0%",
+        "weight": 0.4,
+        "risk_severity": 4
+      },
+      {
+        "name": "particle_size_d50_um",
+        "target": "35-80 um",
+        "weight": 0.3,
+        "risk_severity": 3
+      },
+      {
+        "name": "purity",
+        "target": ">= 98.0%",
+        "weight": 0.3,
+        "risk_severity": 5
+      }
+    ],
+    "design_space": [
+      {
+        "name": "temperature_c",
+        "low": 20.0,
+        "high": 40.0,
+        "units": "C"
+      },
+      {
+        "name": "antisolvent_fraction",
+        "low": 0.0,
+        "high": 0.45,
+        "units": "volume_fraction"
+      },
+      {
+        "name": "ph",
+        "low": 4.5,
+        "high": 7.5,
+        "units": "pH"
+      }
+    ],
+    "constraints": {
+      "max_experiments": 3,
+      "require_human_approval": true,
+      "property_package": {
+        "active_ingredient": "acetaminophen",
+        "temperature_c": 25,
+        "pressure_pa": 101325,
+        "solvents": [
+          {
+            "name": "water",
+            "mole_fraction": 0.7
+          },
+          {
+            "name": "ethanol",
+            "mole_fraction": 0.3
+          }
+        ]
+      }
+    },
+    "historical_experiments": [],
+    "disabled_tools": [],
+    "requested_tools": [
+      "external.thermo_chemicals"
+    ]
+  },
+  "intent": {
+    "activities": [
+      "crystallization",
+      "dissolution",
+      "recommend_experiments",
+      "screen",
+      "risk"
+    ],
+    "entities": [
+      "dissolution",
+      "crystallization",
+      "dissolution_30min",
+      "particle_size_d50_um",
+      "purity"
+    ],
+    "constraints": [
+      "max_experiments=3",
+      "require_human_approval=True",
+      "property_package={'active_ingredient': 'acetaminophen', 'temperature_c': 25, 'pressure_pa': 101325, 'solvents': [{'name': 'water', 'mole_fraction': 0.7}, {'name': 'ethanol', 'mole_fraction': 0.3}]}"
+    ],
+    "rationale": "Intent derived from workflow mode, process unit operations, CQAs, and question terms."
+  },
+  "tool_plan": [
+    {
+      "tool_name": "external.thermo_chemicals",
+      "category": "property_package",
+      "reason": "Maps to phase_equilibrium, properties, mixtures; available. Thermodynamic and chemical-property libraries for Python.",
+      "required": false,
+      "available": true
+    },
+    {
+      "tool_name": "risk.qbd_fmea",
+      "category": "risk",
+      "reason": "Always include CQA/CPP risk framing for regulated development decisions.",
+      "required": true,
+      "available": true
+    }
+  ],
+  "simulations": [
+    {
+      "tool_name": "external.thermo_chemicals",
+      "status": "ok",
+      "inputs": {
+        "active_ingredient": "acetaminophen",
+        "solvents": [
+          {
+            "name": "water",
+            "mole_fraction": 0.7
+          },
+          {
+            "name": "ethanol",
+            "mole_fraction": 0.3
+          }
+        ],
+        "temperature_k": 298.15,
+        "pressure_pa": 101325.0
+      },
+      "metrics": {
+        "property_temperature_k": 298.15,
+        "api_molecular_weight_g_mol": 151.16255999999998,
+        "api_melting_point_k": 442.95,
+        "api_boiling_point_k": 773.15,
+        "api_vapor_pressure_pa": 0.15261216922158066,
+        "api_density_kg_m3": 1142.0739849424388,
+        "api_solubility_parameter_mpa05": 24.468630613000457,
+        "solvent_density_kg_m3": 903.9138852251084,
+        "solvent_viscosity_pa_s": 0.0023970031425352405,
+        "solvent_surface_tension_n_m": 0.03935240262691579,
+        "solubility_parameter_gap_mpa05": 10.752230967385719
+      },
+      "assumptions": [
+        "Thermo/Chemicals properties are used as an open-source screening property package.",
+        "Solubility-parameter mismatch is a proxy for solvent compatibility, not a validated solubility model.",
+        "Mixture properties are used for early CMC screening and require experimental confirmation."
+      ],
+      "warnings": [
+        "acetaminophen is predicted as solid at the screening temperature."
+      ]
+    }
+  ],
+  "recommendations": [],
+  "rl_policy": null,
+  "risk_register": [
+    {
+      "risk": "temperature_c variability may move purity outside target >= 98.0%",
+      "cqa": "purity",
+      "cpp": "temperature_c",
+      "severity": 5,
+      "occurrence": 4,
+      "detectability": 2,
+      "rpn": 40,
+      "mitigation": "Add stability-indicating method and impurity trend review."
+    },
+    {
+      "risk": "ph variability may move dissolution_30min outside target >= 85.0%",
+      "cqa": "dissolution_30min",
+      "cpp": "ph",
+      "severity": 4,
+      "occurrence": 4,
+      "detectability": 2,
+      "rpn": 32,
+      "mitigation": "Confirm discriminatory dissolution method and pH/formulation range."
+    },
+    {
+      "risk": "cooling_rate_c_min variability may move particle_size_d50_um outside target 35-80 um",
+      "cqa": "particle_size_d50_um",
+      "cpp": "cooling_rate_c_min",
+      "severity": 3,
+      "occurrence": 3,
+      "detectability": 3,
+      "rpn": 27,
+      "mitigation": "Use PAT particle-size monitoring during crystallization."
+    }
+  ],
+  "audit_events": [
+    {
+      "timestamp": "2026-07-08T23:53:46.093770Z",
+      "step": "objective_scoping",
+      "status": "ok",
+      "summary": "Parsed workflow mode, unit operations, CQAs, and constraints into structured intent.",
+      "input_digest": "eb036ed6bb261bb8",
+      "output_digest": "8793f241228e24d4"
+    },
+    {
+      "timestamp": "2026-07-08T23:53:46.094181Z",
+      "step": "tool_planning",
+      "status": "ok",
+      "summary": "Selected 2 tools for mode=screen.",
+      "input_digest": "8793f241228e24d4",
+      "output_digest": "c40b26d0c5e7d296"
+    },
+    {
+      "timestamp": "2026-07-08T23:53:46.925136Z",
+      "step": "mechanistic_simulation",
+      "status": "ok",
+      "summary": "Executed or evaluated 1 simulator selections.",
+      "input_digest": "c40b26d0c5e7d296",
+      "output_digest": "6ea38e7a011136b5"
+    },
+    {
+      "timestamp": "2026-07-08T23:53:46.925197Z",
+      "step": "experiment_design",
+      "status": "ok",
+      "summary": "Skipped experiment generation for mode=screen.",
+      "input_digest": "39d0b2febb3cf139",
+      "output_digest": "4f53cda18c2baa0c"
+    },
+    {
+      "timestamp": "2026-07-08T23:53:46.925237Z",
+      "step": "qbd_risk_review",
+      "status": "ok",
+      "summary": "Created 3 CQA/CPP risk items.",
+      "input_digest": "b08b4051e6b3d47e",
+      "output_digest": "5056d566db3b1289"
+    },
+    {
+      "timestamp": "2026-07-08T23:53:46.925310Z",
+      "step": "audit_verification",
+      "status": "ok",
+      "summary": "Audit trail complete.",
+      "input_digest": "25eddaa26a746f88",
+      "output_digest": "87d8f98a668d410b"
+    },
+    {
+      "timestamp": "2026-07-08T23:53:46.925419Z",
+      "step": "report_rendering",
+      "status": "ok",
+      "summary": "Rendered technical development memo.",
+      "input_digest": "a741f4a93beb1288",
+      "output_digest": "489f631017f80a4c"
+    }
+  ],
+  "human_review_required": true,
+  "report": "# Thermo/Chemicals Solvent Property Screen\n\n## Executive Summary\n\nCMC Agent Lab translated the development question into a tool-routed, auditable screen workflow for small_molecule_tablet.\n\n## Objective\n\nScreen a water/ethanol solvent system for a poorly soluble API using an open-source thermodynamic property package before deciding whether to run dissolution and crystallization experiments.\n\n## Selected Tools\n\n- `external.thermo_chemicals` (property_package, available): Maps to phase_equilibrium, properties, mixtures; available. Thermodynamic and chemical-property libraries for Python.\n- `risk.qbd_fmea` (risk, available): Always include CQA/CPP risk framing for regulated development decisions.\n\n## Model and Simulator Results\n\n### external.thermo_chemicals\n\n- property_temperature_k: 298.150\n- api_molecular_weight_g_mol: 151.163\n- api_melting_point_k: 442.950\n- api_boiling_point_k: 773.150\n- api_vapor_pressure_pa: 0.153\n- api_density_kg_m3: 1142.074\n- api_solubility_parameter_mpa05: 24.469\n- solvent_density_kg_m3: 903.914\n- solvent_viscosity_pa_s: 0.002\n- solvent_surface_tension_n_m: 0.039\n- solubility_parameter_gap_mpa05: 10.752\n- Warning: acetaminophen is predicted as solid at the screening temperature.\n- Assumptions: Thermo/Chemicals properties are used as an open-source screening property package.; Solubility-parameter mismatch is a proxy for solvent compatibility, not a validated solubility model.; Mixture properties are used for early CMC screening and require experimental confirmation.\n\n\n## QbD Risk Register\n\n- RPN 40: `temperature_c` -> `purity`. temperature_c variability may move purity outside target >= 98.0% Mitigation: Add stability-indicating method and impurity trend review.\n- RPN 32: `ph` -> `dissolution_30min`. ph variability may move dissolution_30min outside target >= 85.0% Mitigation: Confirm discriminatory dissolution method and pH/formulation range.\n- RPN 27: `cooling_rate_c_min` -> `particle_size_d50_um`. cooling_rate_c_min variability may move particle_size_d50_um outside target 35-80 um Mitigation: Use PAT particle-size monitoring during crystallization.\n\n## Audit Controls\n\n- Human review required: True\n- Audit events recorded: 6\n- objective_scoping: ok - Parsed workflow mode, unit operations, CQAs, and constraints into structured intent.\n- tool_planning: ok - Selected 2 tools for mode=screen.\n- mechanistic_simulation: ok - Executed or evaluated 1 simulator selections.\n- experiment_design: ok - Skipped experiment generation for mode=screen.\n- qbd_risk_review: ok - Created 3 CQA/CPP risk items.\n- audit_verification: ok - Audit trail complete.\n\n## Intended Use Boundary\n\nThis is a process-development decision-support workflow. It proposes model-backed experiments for scientist review; it does not release, validate, or manufacture a drug product.\n"
+}

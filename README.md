@@ -78,6 +78,9 @@ cmc-agent-lab run examples/rl_experiment_policy.yaml \
   --output results/rl-policy-memo.md \
   --json results/rl-policy-state.json
 
+python -m pip install -e ".[property]"
+cmc-agent-lab run examples/property_package_screen.yaml
+
 pytest
 ```
 
@@ -96,6 +99,8 @@ Pre-generated outputs are included for quick review:
 - [Full workflow audit state](demo/full-workflow-state.json)
 - [RL policy memo](demo/rl-policy-memo.md)
 - [RL policy audit state](demo/rl-policy-state.json)
+- [Thermo/Chemicals property-screen memo](demo/property-package-memo.md)
+- [Thermo/Chemicals property-screen state](demo/property-package-state.json)
 
 ## Repository Map
 
@@ -135,6 +140,7 @@ docs/
 examples/
   small_molecule_process.yaml Repeatable process-development scenario
   rl_experiment_policy.yaml   Simulator-backed RL experiment-policy scenario
+  property_package_screen.yaml Thermo/Chemicals solvent-property screen
 demo/
   full-workflow-memo.md       Generated technical development memo
   rl-policy-memo.md           Generated RL policy memo

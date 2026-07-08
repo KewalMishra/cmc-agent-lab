@@ -17,8 +17,9 @@ For a poorly soluble late-stage small molecule intended as an oral tablet, ident
 - `optimizer.active_learning_batch` (optimizer, available): Maps to design_of_experiments, bayesian_optimization; available. Candidate ranking with GP uncertainty when historical data is available.
 - `rl.epsilon_greedy_campaign` (rl_policy, available): Maps to sequential_experimentation, digital_twin, policy_learning; available. Sequential experiment-selection policy trained against the mechanistic simulator environment.
 - `risk.qbd_fmea` (risk, available): Maps to qbd, cqa, cpp; available. QbD/FMEA-style risk register linking CPPs to CQAs.
+- `external.thermo_chemicals` (property_package, available): Maps to phase_equilibrium, properties, mixtures; available. Thermodynamic and chemical-property libraries for Python.
 
-## Mechanistic Simulation Results
+## Model and Simulator Results
 
 ### builtin.arrhenius_stability
 
@@ -50,6 +51,22 @@ For a poorly soluble late-stage small molecule intended as an oral tablet, ident
 - Warning: Dissolution at 30 minutes is below target.
 - Assumptions: Noyes-Whitney dissolution with constant surface-area proxy.; pH and antisolvent terms approximate formulation effects.
 
+### external.thermo_chemicals
+
+- property_temperature_k: 315.650
+- api_molecular_weight_g_mol: 151.163
+- api_melting_point_k: 442.950
+- api_boiling_point_k: 773.150
+- api_vapor_pressure_pa: 1.044
+- api_density_kg_m3: 1135.916
+- api_solubility_parameter_mpa05: 23.932
+- solvent_density_kg_m3: 890.372
+- solvent_viscosity_pa_s: 0.002
+- solvent_surface_tension_n_m: 0.037
+- solubility_parameter_gap_mpa05: 10.588
+- Warning: acetaminophen is predicted as solid at the screening temperature.
+- Assumptions: Thermo/Chemicals properties are used as an open-source screening property package.; Solubility-parameter mismatch is a proxy for solvent compatibility, not a validated solubility model.; Mixture properties are used for early CMC screening and require experimental confirmation.
+
 ## Recommended Next Experiments
 
 1. temperature_c=40.1321, cooling_rate_c_min=0.6203, antisolvent_fraction=0.2616, residence_time_min=172.1848, ph=7.1672 | expected score=78.494 | information gain=4.948
@@ -76,8 +93,8 @@ For a poorly soluble late-stage small molecule intended as an oral tablet, ident
 - Human review required: True
 - Audit events recorded: 7
 - objective_scoping: ok - Parsed workflow mode, unit operations, CQAs, and constraints into structured intent.
-- tool_planning: ok - Selected 7 tools for mode=full.
-- mechanistic_simulation: ok - Executed or evaluated 4 simulator selections.
+- tool_planning: ok - Selected 8 tools for mode=full.
+- mechanistic_simulation: ok - Executed or evaluated 5 simulator selections.
 - surrogate_readiness: ok - Historical experiment count=4; surrogate status=ready.
 - experiment_design: ok - Recommended top 5 next experiments.
 - qbd_risk_review: ok - Created 5 CQA/CPP risk items.

@@ -30,7 +30,7 @@ def render_report(state: AgentState) -> AgentState:
         lines.append(f"- `{item.tool_name}` ({item.category}, {availability}): {item.reason}")
 
     if state.simulations:
-        lines.extend(["", "## Mechanistic Simulation Results", ""])
+        lines.extend(["", "## Model and Simulator Results", ""])
         for result in state.simulations:
             lines.append(f"### {result.tool_name}")
             lines.append("")
