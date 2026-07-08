@@ -1,0 +1,98 @@
+project_name: "RL-Guided CMC Experiment Campaign"
+question: >
+  Learn a sequential experiment-selection policy for a late-stage small molecule process. The
+  policy should use mechanistic simulator feedback to choose experiments that improve purity,
+  dissolution, particle size, yield, and impurity burden within a five-experiment budget.
+mode: learn
+product_type: small_molecule_tablet
+route: oral
+unit_operations:
+  - reaction
+  - crystallization
+  - dissolution
+  - stability
+qtp_profile:
+  dose_mg: 100
+  shelf_life_months: 24
+  target_release: immediate_release
+  clinical_phase: late_stage_development
+critical_quality_attributes:
+  - name: purity
+    target: ">= 98.0%"
+    weight: 0.3
+    risk_severity: 5
+  - name: dissolution_30min
+    target: ">= 85.0%"
+    weight: 0.25
+    risk_severity: 4
+  - name: particle_size_d50_um
+    target: "35-80 um"
+    weight: 0.2
+    risk_severity: 3
+  - name: isolated_yield
+    target: ">= 82.0%"
+    weight: 0.15
+    risk_severity: 3
+  - name: impurity_burden
+    target: "<= 1.0%"
+    weight: 0.1
+    risk_severity: 4
+design_space:
+  variables:
+    - name: temperature_c
+      low: 20
+      high: 65
+      units: C
+    - name: cooling_rate_c_min
+      low: 0.1
+      high: 1.5
+      units: C/min
+    - name: antisolvent_fraction
+      low: 0.0
+      high: 0.45
+      units: volume_fraction
+    - name: residence_time_min
+      low: 30
+      high: 180
+      units: min
+    - name: ph
+      low: 4.5
+      high: 7.5
+      units: pH
+constraints:
+  max_experiments: 5
+  require_human_approval: true
+  purity_threshold_pct: 98.0
+  dissolution_threshold_pct: 85.0
+  impurity_threshold_pct: 1.0
+  activation_energy_kj_mol: 62.0
+  degradation_k_25_per_day: 0.00003
+  rl_episodes: 25
+  rl_budget: 5
+  rl_candidate_count: 80
+  rl_epsilon: 0.2
+historical_experiments:
+  - temperature_c: 25
+    cooling_rate_c_min: 0.3
+    antisolvent_fraction: 0.15
+    residence_time_min: 120
+    ph: 6.2
+    objective_score: 71.5
+  - temperature_c: 35
+    cooling_rate_c_min: 0.5
+    antisolvent_fraction: 0.25
+    residence_time_min: 90
+    ph: 6.7
+    objective_score: 78.1
+  - temperature_c: 45
+    cooling_rate_c_min: 0.9
+    antisolvent_fraction: 0.35
+    residence_time_min: 80
+    ph: 5.8
+    objective_score: 73.6
+  - temperature_c: 55
+    cooling_rate_c_min: 1.2
+    antisolvent_fraction: 0.40
+    residence_time_min: 60
+    ph: 5.2
+    objective_score: 64.4
